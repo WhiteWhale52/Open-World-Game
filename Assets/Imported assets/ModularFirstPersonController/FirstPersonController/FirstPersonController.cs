@@ -17,6 +17,7 @@ using UnityEngine.UI;
 public class FirstPersonController : MonoBehaviour
 {
     private Rigidbody rb;
+    private Animator _animator;
 
     #region Camera Movement Variables
 
@@ -61,7 +62,7 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private bool isWalking = false;
-
+    
     #region Sprint
 
     public bool enableSprint = true;
@@ -132,9 +133,10 @@ public class FirstPersonController : MonoBehaviour
     #endregion
 
     private void Awake()
-    {
+    { 
+        _animator = GameObject.Find("HPCharacter").GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-
+        
         crosshairObject = GetComponentInChildren<Image>();
 
         // Set internal variables
@@ -151,6 +153,8 @@ public class FirstPersonController : MonoBehaviour
 
     void Start()
     {
+        _animator.SetBool("IsWalking",true);
+
         if(lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -378,10 +382,28 @@ public class FirstPersonController : MonoBehaviour
             if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
             {
                 isWalking = true;
+                if (targetVelocity.x > 0)
+                {
+                    _animator.SetBool("WalkingRight", true);
+                }else if (targetVelocity.x < 0)
+                {
+                    _animator.SetBool("WalkingLeft", true);
+                }else if (targetVelocity.y > 0)
+                {
+                    _animator.SetBool("WalkingForward", true);
+                }else if (targetVelocity.y < 0)
+                {
+                    _animator.SetBool("WalkingBackward", true);
+                }
             }
             else
             {
                 isWalking = false;
+                _animator.SetBool("WalkingRight", false);
+                _animator.SetBool("WalkingForward", false);
+                _animator.SetBool("WalkingBackward", false);
+                _animator.SetBool("WalkingLeft", false);
+
             }
 
             // All movement calculations shile sprint is active
@@ -464,6 +486,7 @@ public class FirstPersonController : MonoBehaviour
         // Adds force to the player rigidbody to jump
         if (isGrounded)
         {
+            _animator.SetBool("Jump",true);
             rb.AddForce(0f, jumpPower, 0f, ForceMode.Impulse);
             isGrounded = false;
         }
@@ -471,6 +494,7 @@ public class FirstPersonController : MonoBehaviour
         // When crouched and using toggle system, will uncrouch for a jump
         if(isCrouched && !holdToCrouch)
         {
+            
             Crouch();
         }
     }
