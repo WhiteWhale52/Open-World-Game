@@ -201,7 +201,7 @@ public class FirstPersonController : MonoBehaviour
 
         #endregion
     }
-    
+
     float camRotation;
 
     private void Update()
@@ -332,13 +332,7 @@ public class FirstPersonController : MonoBehaviour
         // Gets input and calls jump method
         if(enableJump && Input.GetKeyDown(jumpKey) && isGrounded)
         {
-            _animator.SetBool("Jump",true);
             Jump();
-            
-        }
-        else
-        {
-            _animator.SetBool("Jump",false);
         }
 
         #endregion
@@ -388,17 +382,16 @@ public class FirstPersonController : MonoBehaviour
             if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
             {
                 isWalking = true;
-                _animator.SetBool("IsWalking",true);
                 if (targetVelocity.x > 0)
                 {
                     _animator.SetBool("WalkingRight", true);
                 }else if (targetVelocity.x < 0)
                 {
                     _animator.SetBool("WalkingLeft", true);
-                }else if (targetVelocity.z > 0)
+                }else if (targetVelocity.y > 0)
                 {
                     _animator.SetBool("WalkingForward", true);
-                }else if (targetVelocity.z < 0)
+                }else if (targetVelocity.y < 0)
                 {
                     _animator.SetBool("WalkingBackward", true);
                 }
@@ -406,7 +399,6 @@ public class FirstPersonController : MonoBehaviour
             else
             {
                 isWalking = false;
-                _animator.SetBool("IsWalking",false);
                 _animator.SetBool("WalkingRight", false);
                 _animator.SetBool("WalkingForward", false);
                 _animator.SetBool("WalkingBackward", false);
@@ -494,11 +486,10 @@ public class FirstPersonController : MonoBehaviour
         // Adds force to the player rigidbody to jump
         if (isGrounded)
         {
-            //_animator.SetBool("Jump",true);
+            _animator.SetBool("Jump",true);
             rb.AddForce(0f, jumpPower, 0f, ForceMode.Impulse);
             isGrounded = false;
         }
-
 
         // When crouched and using toggle system, will uncrouch for a jump
         if(isCrouched && !holdToCrouch)
