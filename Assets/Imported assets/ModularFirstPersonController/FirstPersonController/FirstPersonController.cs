@@ -59,7 +59,7 @@ public class FirstPersonController : MonoBehaviour
     public bool playerCanMove = true;
     public float walkSpeed = 5f;
     public float maxVelocityChange = 10f;
-
+     #endregion
     // Internal Variables
     private bool isWalking = false;
     
@@ -117,7 +117,7 @@ public class FirstPersonController : MonoBehaviour
     private Vector3 originalScale;
 
     #endregion
-    #endregion
+   
 
     #region Head Bob
 
